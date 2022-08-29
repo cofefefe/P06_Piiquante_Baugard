@@ -1,4 +1,4 @@
-# P06_Piiquante_Baugard
+ P06_Piiquante_Baugard
 Openclassroom's project | working on node, express, mongoDB | backend
 
 # Getting started
@@ -8,4 +8,6 @@ Openclassroom's project | working on node, express, mongoDB | backend
 4. go to test[http://localhost4200](http://localhost:4200)
 5. 'cd ../backend'
 7. 'npm install' ( if not already done )
-8. 'npm run start'
+8. 'npm install nodemonde -- save' 
+9. 'npm run serve' to launch nodemon or =>
+10. 'npm run start' to lauch node

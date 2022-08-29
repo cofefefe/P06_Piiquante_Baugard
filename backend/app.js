@@ -10,9 +10,6 @@ const app = express()
 // have access to request body
 app.use(bodyParser.json())
 
-// response at json format
-app.use(express.json())
-
 // Cors permission
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*")
@@ -23,7 +20,7 @@ app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  )
+  ),
   next()
 })
 
@@ -35,6 +32,10 @@ mongoose.connect(uri,
     useUnifiedTopology: true })
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !'))
+
+
+
+app.post("/api/auth", userRoutes)
 
 
 module.exports = app
