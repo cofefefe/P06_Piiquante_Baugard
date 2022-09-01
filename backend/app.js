@@ -2,9 +2,10 @@
 const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
-
+const path = require('path');
 // Required files
 const userRoutes = require('./routes/user')
+const sauceRoutes = require('./routes/sauces')
 const app = express()
 
 // have access to request body
@@ -31,7 +32,8 @@ mongoose.connect(uri,
 .catch(() => console.log('Connexion à MongoDB échouée !'))
 
 app.use("/api/auth", userRoutes)
-
+app.use('/api/sauces', sauceRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 module.exports = app
