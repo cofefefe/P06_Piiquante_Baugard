@@ -3,27 +3,36 @@ const fs = require('fs')
 
 // Create an object 'sauce'
 exports.addSauce = (req,res,next) => {
-    const sauceObject = JSON.parse(req.body.sauce);
-    delete sauceObject._id
-
-    const sauce = new Sauce({
-        ...sauceObject,
-        // Génère url de l'image
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        likes: 0,
-        dislikes: 0,
-        usersLiked: '',
-        usersDisliked: ''
-    });
-    sauce.save()
-        .then((req,res,next)=>{
-            res.status(200).json({message : "New sauce !"})
-        })
-        .catch((error)=> {
-            res.status(401).json({error})
-            console.log(error)
-        })
+    delete req.body._id;
+  const sauce = new Sauce({
+    ...req.body
+  });
+  sauce.save()
+    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+    .catch(error => res.status(400).json({ error }));
 }
+// exports.addSauce = (req,res,next) => {
+//     const sauceObject = JSON.parse(req.body.sauce);
+//     delete sauceObject._id
+
+//     const sauce = new Sauce({
+//         ...sauceObject,
+//         // Génère url de l'image
+//         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+//         likes: 0,
+//         dislikes: 0,
+//         usersLiked: '',
+//         usersDisliked: ''
+//     });
+//     sauce.save()
+//         .then((req,res,next)=>{
+//             res.status(200).json({message : "New sauce !"})
+//         })
+//         .catch((error)=> {
+//             res.status(401).json({error})
+//             console.log(error)
+//         })
+// }
 // Delete a sauce
 exports.deleteSauce = (req,res,next) => {
     Sauce.deleteOne({_id : req.params.id})
@@ -83,3 +92,4 @@ exports.findAllSauce = (req,res,next)=>{
             res.satus(400).json({error})
         })
 }
+

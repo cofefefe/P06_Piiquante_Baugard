@@ -7,6 +7,7 @@ const path = require('path');
 const userRoutes = require('./routes/user')
 const sauceRoutes = require('./routes/sauces')
 const app = express()
+const sauceController = require('./controllers/sauces')
 
 // have access to request body
 
