@@ -9,7 +9,7 @@ Router.get("/", sauceCtrl.findAllSauce)
 // Delete a Sauce
 Router.delete("/:id", sauceCtrl.deleteSauce)
 // Add a sauce
-Router.post("/", multer, sauceCtrl.addSauce)
+Router.post("/", sauceCtrl.addSauce)
 // Modify sauce
 Router.put("/:id", multer, sauceCtrl.modifySauce)
 

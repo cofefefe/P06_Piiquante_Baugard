@@ -2,37 +2,21 @@ const Sauce = require('../models/sauces')
 const fs = require('fs')
 
 // Create an object 'sauce'
+
 exports.addSauce = (req,res,next) => {
-    delete req.body._id;
+  console.log('req.body', req.body)
   const sauce = new Sauce({
     ...req.body
-  });
+  })
   sauce.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
-    .catch(error => res.status(400).json({ error }));
+  .then(()=>{
+    res.status(200).json({message:"enregistrement du produit réussi !"})
+  })
+  .catch((error)=>{
+    res.status(420).json({error})
+    console.log(error)
+  })
 }
-// exports.addSauce = (req,res,next) => {
-//     const sauceObject = JSON.parse(req.body.sauce);
-//     delete sauceObject._id
-
-//     const sauce = new Sauce({
-//         ...sauceObject,
-//         // Génère url de l'image
-//         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-//         likes: 0,
-//         dislikes: 0,
-//         usersLiked: '',
-//         usersDisliked: ''
-//     });
-//     sauce.save()
-//         .then((req,res,next)=>{
-//             res.status(200).json({message : "New sauce !"})
-//         })
-//         .catch((error)=> {
-//             res.status(401).json({error})
-//             console.log(error)
-//         })
-// }
 // Delete a sauce
 exports.deleteSauce = (req,res,next) => {
     Sauce.deleteOne({_id : req.params.id})
