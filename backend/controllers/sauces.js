@@ -6,7 +6,11 @@ const fs = require('fs')
 exports.addSauce = (req,res,next) => {
   console.log('req.body', req.body)
   const sauce = new Sauce({
-    ...req.body
+    ...req.body,
+    likes: 0,
+    dislikes: 0,
+    usersLiked: [],
+    usersDisliked: []
   })
   sauce.save()
   .then(()=>{
