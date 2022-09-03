@@ -18,4 +18,4 @@ Router.put("/:id", auth, multer, sauceCtrl.modifySauce)
 // like & dislike
 Router.post("/:id/like", sauceCtrl.like)
 
-module.exports = Router;
+module.exports = Router

@@ -18,7 +18,7 @@ exports.signup = (req, res, next) => {
             user.save()
                 .then((r) => {
                     console.log("r", r)
-                    return res.status(201).json({message: "utilisateur créé !"});
+                    return res.status(201).json({message: "utilisateur créé !"})
                     }
                 )
                 .catch((error) => {
