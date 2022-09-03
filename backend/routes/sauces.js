@@ -12,5 +12,7 @@ Router.delete("/:id", sauceCtrl.deleteSauce)
 Router.post("/", sauceCtrl.addSauce)
 // Modify sauce
 Router.put("/:id", multer, sauceCtrl.modifySauce)
+// like & dislike
+Router.post("/:id/like", sauceCtrl.like)
 
 module.exports = Router;

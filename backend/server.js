@@ -1,9 +1,14 @@
 const http = require('http');
 const app = require('./app');
-
+const express = require('express')
+const bodyParser = require('body-parser')
 // Pour résoudre une erreur inconnue lors de la création d'un user depuis le front.
 const cors = require('cors');
-app.use(cors()) 
+app.use(cors());
+app.use(express.urlencoded({
+extended:true
+}));
+app.use(bodyParser.json());
 // ------------------------------------------------------------------------------
 
 

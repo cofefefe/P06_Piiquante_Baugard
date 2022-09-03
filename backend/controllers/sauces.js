@@ -4,7 +4,6 @@ const fs = require('fs')
 // Create an object 'sauce'
 
 exports.addSauce = (req,res,next) => {
-  console.log('req.body', req.body)
   const sauce = new Sauce({
     ...req.body,
     likes: 0,
@@ -62,8 +61,8 @@ exports.modifySauce = (req,res,next) => {
 // Find sauce
 exports.findASauce = (req,res,next) => {
     Sauce.findOne({_id : req.params.id})
-        .then(()=>{
-            res.status(200).json('Voici la sauce ! ')
+        .then((sauce)=>{
+            res.status(200).json(sauce)
         })
         .catch((error)=>{
             res.status(400).json({error})
@@ -77,7 +76,10 @@ exports.findAllSauce = (req,res,next)=>{
             res.status(200).json(sauces)
         })
         .catch((error)=>{
-            res.satus(400).json({error})
+            res.status(400).json({error})
         })
 }
 
+exports.like = (req,res,next) => {
+    
+}

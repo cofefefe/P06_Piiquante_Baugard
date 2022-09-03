@@ -3,12 +3,13 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path');
+const cors = require('cors')
 // Required files
 const userRoutes = require('./routes/user')
 const sauceRoutes = require('./routes/sauces')
 const app = express()
 const sauceController = require('./controllers/sauces')
-
+const multer = require('./images/multer-config')
 // have access to request body
 
 app.use(express.json());
@@ -21,7 +22,6 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use(bodyParser.json());
 
 // Link frontend and backend database
 const uri = 'mongodb+srv://cofefefe:Trinite333@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority'
@@ -33,7 +33,7 @@ mongoose.connect(uri,
 .catch(() => console.log('Connexion à MongoDB échouée !'))
 
 app.use("/api/auth", userRoutes)
-app.use('/api/sauces', sauceRoutes);
+app.use('/api/sauces',multer, sauceRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
