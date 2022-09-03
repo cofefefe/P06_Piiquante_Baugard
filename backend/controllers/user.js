@@ -1,16 +1,20 @@
+// Security dependancies, hash passworld, create token
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+//Import User Model
 const User = require('../models/user')
 
+
 exports.signup = (req, res, next) => {
-    console.log("signup")
+    // crypt the password
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            console.log("req.body.email", req.body.email)
-            console.log("hash", hash)
+            // create new User
             const user = new User({
                 email :    req.body.email,
                 password : hash,
             })
+            // save the user
             user.save()
                 .then((r) => {
                     console.log("r", r)
@@ -18,7 +22,6 @@ exports.signup = (req, res, next) => {
                     }
                 )
                 .catch((error) => {
-                    console.log("error", error)
                     return res.status(400).json({error})
                 })
         })
@@ -39,7 +42,11 @@ exports.login = (req, res, next) => {
                     }
                     res.status(200).json({
                         userId : user._id,
-                        token : 'TOKEN'
+                        token : jwt.sign(
+                            { userId:user._id },
+                            "RANDOM_TOKEN_SECRET",
+                            { expiresIn:'24h'}
+                        )
                     })
                 })
                 .catch((error)=> res.status(500).json({error}))
