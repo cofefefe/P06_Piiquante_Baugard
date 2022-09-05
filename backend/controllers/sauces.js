@@ -4,8 +4,10 @@ const fs = require('fs')
 // Create an object 'sauce'
 
 exports.addSauce = (req,res,next) => {
+    const sauceObject = JSON.parse(req.body.sauce)
+    delete sauceObject._id;
   const sauce = new Sauce({
-    ...req.body,
+    ...sauceObject,
     likes: 0,
     dislikes: 0,
     usersLiked: [],
