@@ -9,7 +9,7 @@ const userRoutes = require('./routes/user')
 const sauceRoutes = require('./routes/sauces')
 const app = express()
 const sauceController = require('./controllers/sauces')
-const multer = require('./images/multer-config')
+const multer = require('./middleware/multer-config')
 // have access to request body
 
 app.use(express.json());
@@ -33,7 +33,7 @@ mongoose.connect(uri,
 .catch(() => console.log('Connexion à MongoDB échouée !'))
 
 app.use("/api/auth", userRoutes)
-app.use('/api/sauces',multer, sauceRoutes)
+app.use('/api/sauces', sauceRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 
