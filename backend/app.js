@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
 const cors = require('cors')
+const dotenv = require('dotenv')
 
 // Required files
 const userRoutes = require('./routes/user')
@@ -23,10 +24,12 @@ app.use((req, res, next) => {
   next()
 })
 
-require('dotenv').config();
+require("dotenv").config({
+  path: path.resolve(__dirname, './routes/.env')
+});
 // Link frontend and backend database
-// const newUri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_USER_PASSWORD}@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority`
-const uri = `mongodb+srv://cofefefe:Trinite333@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority`
+const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_USER_PASSWORD}@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority`
+
 mongoose.connect(uri,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
