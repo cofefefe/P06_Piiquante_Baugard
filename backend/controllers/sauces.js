@@ -79,24 +79,67 @@ exports.findAllSauce = (req,res,next)=>{
         })
 }
 
+
 exports.like = (req,res,next) => {
-    // Valeur de like dans la requête
-    const like = req.body.like
-    // Valeur de userId dans la requête
+    // Like value
+    let like = req.body.like
+    // UserId of the request
     const userId = req.body.userId
-    // Id de la sauce dans les paramètres de la requête
+    // Sauce Id by params request
     const productId = req.params.id
-
-  
-    // cas 0 : L'utilisateur aime le produit ( like )
-        // Nous avons besoin de l'user Id à insérer dans le tableau 'usersLiked'(??model??)
-        // Nous devons prendre la valeur de like(??requête??), et la modifier en conséquence (+1)
-
-    // cas 1 : L'utilisateur annule son like/dislike
-        // Nous avons besoin de l'userId, afin de le retirer du tableau 'usersLiked' ou 'usersDisliked'(??model??)
-        // Nous devons redéfinir une valeur neutre ( 0 ) à Like et Dislike(??requête??)
-
-    // cas 2 : L'utilisateur n'aime pas le produit ( dislike )
-        // Nous avons besoin de l'userId à insérer dans le tableau 'usersDisliked'(??model??)
-        // Nous devons définir la valeur de dislike(??requête??) a +1
+        // If user liked the sauce
+        if(like === 1){
+            Sauce.updateOne(
+                { _id: productId },
+                {
+                    $inc : {likes : like++},
+                    $push : {usersLiked : userId}
+                })
+                .then(() => {
+                    res.status(200).json({message : "You liked this sauce !"})
+                })
+                .catch((error) => {
+                    res.status(400).json({error})
+                })
+        }
+        // If user disliked the Sauce
+        else if(like === -1){
+            Sauce.updateOne(
+                { _id: productId },
+                {
+                  $inc: { dislikes: like++ * -1 },
+                  $push: { usersDisliked: userId },
+                }
+              )
+                .then((sauce) => res.status(200).json({message: "Ajout Dislike"}))
+                .catch((error) => res.status(400).json({error}));
+        }
+        // If user is neutral
+        else{
+            Sauce.findOne({ _id: productId })
+            .then((sauce) => {
+              if (sauce.usersLiked.includes(userId)) {
+                Sauce.updateOne(
+                  { _id: productId },
+                  { $pull: { usersLiked: userId }, $inc: { likes: -1 } }
+                )
+                  .then((sauce) => {
+                    res.status(200).json({ message: "Suppression Like" });
+                  })
+                  .catch((error) => res.status(400).json({ error }));
+              } else if (sauce.usersDisliked.includes(userId)) {
+                Sauce.updateOne(
+                  { _id: req.params.id },
+                  {
+                    $pull: { usersDisliked: productId },
+                    $inc: { dislikes: -1 },
+                  }
+                )
+                  .then((sauce) => {
+                    res.status(200).json({ message: "Suppression Dislike" });
+                  })
+                  .catch((error) => res.status(400).json({ error }));
+              }
+            })
+        }  
 }
