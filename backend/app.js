@@ -3,13 +3,9 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
-<<<<<<< HEAD
-const dotenv = require('dotenv') 
-=======
-const dotenv = require('dotenv')
-const helmet = require('helmet')
 
->>>>>>> 128f4de75d3d137bdf6521d5906e7eb1a9a05a39
+const dotenv = require('dotenv') 
+
 // Required files
 const userRoutes = require('./routes/user')
 const sauceRoutes = require('./routes/sauces')
@@ -19,15 +15,11 @@ const multer = require('./middleware/multer-config')
 // have access to request body
 
 app.use(express.json());
-<<<<<<< HEAD
 // Define path of .env
 require("dotenv").config({
   path: path.resolve(__dirname, './middleware/.env')
 });
 
-=======
-app.use(helmet())
->>>>>>> 128f4de75d3d137bdf6521d5906e7eb1a9a05a39
 // Cors permission
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
