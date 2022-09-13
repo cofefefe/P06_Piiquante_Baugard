@@ -11,3 +11,4 @@ Openclassroom's project | working on node, express, mongoDB | backend
 8. `npm install nodemon --save`
 9. `npm run serve` to launch nodemon or =>
 10. `npm run start` to lauch node
+11. Dans le dossier /backend, créez un dossier 'images'

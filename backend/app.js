@@ -3,7 +3,13 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
+<<<<<<< HEAD
 const dotenv = require('dotenv') 
+=======
+const dotenv = require('dotenv')
+const helmet = require('helmet')
+
+>>>>>>> 128f4de75d3d137bdf6521d5906e7eb1a9a05a39
 // Required files
 const userRoutes = require('./routes/user')
 const sauceRoutes = require('./routes/sauces')
@@ -13,11 +19,15 @@ const multer = require('./middleware/multer-config')
 // have access to request body
 
 app.use(express.json());
+<<<<<<< HEAD
 // Define path of .env
 require("dotenv").config({
   path: path.resolve(__dirname, './middleware/.env')
 });
 
+=======
+app.use(helmet())
+>>>>>>> 128f4de75d3d137bdf6521d5906e7eb1a9a05a39
 // Cors permission
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -26,7 +36,9 @@ app.use((req, res, next) => {
   next()
 })
 
-
+require("dotenv").config({
+  path: path.resolve(__dirname, './routes/.env')
+});
 // Link frontend and backend database
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_USER_PASSWORD}@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority`
 
@@ -37,7 +49,7 @@ mongoose.connect(uri,
 .catch(() => console.log('Connexion à MongoDB échouée !'))
 
 app.use("/api/auth", userRoutes)
-app.use('/api/sauces',multer, sauceRoutes)
+app.use('/api/sauces', sauceRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 
