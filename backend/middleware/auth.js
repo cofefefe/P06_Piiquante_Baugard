@@ -6,19 +6,19 @@ require("dotenv").config({
     path: path.resolve(__dirname, './routes/.env')
 });
 
+
 module.exports = (req, res, next) => {
     try {
-        // .split(' ')[1] give back the secund part of 'authorization', Cancel 'bearer' and callback token
+        // .split(' ')[1] retourne la deuxième partie de l'autorisation et pas le bearer "bearer xxxxxxx"
         const token = req.headers.authorization.split(' ')[1];
-        // Verify token with the key token
-        const decodedToken = jwt.verify(token, process.env.TOKEN )
-        const userId = decodedToken.userId
+        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+        const userId = decodedToken.userId;
         if (req.body.userId && req.body.userId !== userId) {
-            throw `Vous n'y êtes pas autorisé !`
+            throw 'User ID non valable !';
         } else {
-            next()
+            next();
         }
     } catch (error) {
-        res.status(401).json({error})
+        res.status(401).json({ error: error | 'Requête non authentifiée !' });
     }
 }
