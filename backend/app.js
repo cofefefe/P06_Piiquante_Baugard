@@ -3,8 +3,8 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
-const cors = require('cors')
 const dotenv = require('dotenv')
+const helmet = require('helmet')
 
 // Required files
 const userRoutes = require('./routes/user')
@@ -15,7 +15,7 @@ const multer = require('./middleware/multer-config')
 // have access to request body
 
 app.use(express.json());
-
+app.use(helmet())
 // Cors permission
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
