@@ -6,7 +6,6 @@ require("dotenv").config({
     path: path.resolve(__dirname, './routes/.env')
 });
 
-
 module.exports = (req, res, next) => {
     try {
         // .split(' ')[1] retourne la deuxième partie de l'autorisation et pas le bearer "bearer xxxxxxx"

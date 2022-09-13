@@ -15,10 +15,12 @@ const multer = require('./middleware/multer-config')
 // have access to request body
 
 app.use(express.json());
+
 // Define path of .env
-require("dotenv").config({
-  path: path.resolve(__dirname, './middleware/.env')
+dotenv.config({
+  path: path.resolve(__dirname, '.env')
 });
+
 
 // Cors permission
 app.use((req, res, next) => {
@@ -28,9 +30,6 @@ app.use((req, res, next) => {
   next()
 })
 
-require("dotenv").config({
-  path: path.resolve(__dirname, './routes/.env')
-});
 // Link frontend and backend database
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_USER_PASSWORD}@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority`
 
