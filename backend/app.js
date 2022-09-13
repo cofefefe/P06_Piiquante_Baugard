@@ -3,16 +3,20 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
-const cors = require('cors')
+const dotenv = require('dotenv') 
 // Required files
 const userRoutes = require('./routes/user')
 const sauceRoutes = require('./routes/sauces')
 const app = express()
 const sauceController = require('./controllers/sauces')
-const multer = require('./images/multer-config')
+const multer = require('./middleware/multer-config')
 // have access to request body
 
 app.use(express.json());
+// Define path of .env
+require("dotenv").config({
+  path: path.resolve(__dirname, './middleware/.env')
+});
 
 // Cors permission
 app.use((req, res, next) => {
@@ -24,7 +28,7 @@ app.use((req, res, next) => {
 
 
 // Link frontend and backend database
-const uri = 'mongodb+srv://cofefefe:Trinite333@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority'
+const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_USER_PASSWORD}@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority`
 
 mongoose.connect(uri,
   { useNewUrlParser: true,
