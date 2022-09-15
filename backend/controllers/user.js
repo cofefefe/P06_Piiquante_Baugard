@@ -7,7 +7,7 @@ const User = require('../models/user')
 
 const regexPassword = '^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[a-z]).{8,}$'
 
-clientPasswordVerification=(req,res,next) => {
+clientPasswordVerification= (req,res,next) => {
     if (regexPassword.test(req.body.password) === false) {
         console.log('dans le false')
         return false;
