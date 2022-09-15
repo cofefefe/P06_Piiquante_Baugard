@@ -1,12 +1,28 @@
 // Security dependancies, hash passworld, create token
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const bodyParser = require('body-parser')
 //Import User Model
 const User = require('../models/user')
 
+const regexPassword = '^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[a-z]).{8,}$'
+
+clientPasswordVerification=(req,res,next) => {
+    if (regexPassword.test(req.body.password) === false) {
+        console.log('dans le false')
+        return false;
+    } else {
+        console.log('true')
+    }
+    console.log('on est true du coup ?')
+    return true;
+    next()
+}
+
 
 exports.signup = (req, res, next) => {
-    // crypt the password
+    // 
+    if (clientPasswordVerification != false){
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             // create new User
@@ -26,7 +42,9 @@ exports.signup = (req, res, next) => {
                 })
         })
         .catch((error)=> res.status(500).json({error}))
-};
+}else{
+    res.status(400).json({message : "Votre mot de passe doit contenir 8 caractère et a minima un nombre et une lettre"})
+}}
 
 
 exports.login = (req, res, next) => {
