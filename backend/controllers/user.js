@@ -4,36 +4,20 @@ const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
 //Import User Model
 const User = require('../models/user')
-
-const regexPassword = '^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[a-z]).{8,}$'
-
-clientPasswordVerification= (req,res,next) => {
-    if (regexPassword.test(req.body.password) === false) {
-        console.log('dans le false')
-        return false;
-    } else {
-        console.log('true')
-    }
-    console.log('on est true du coup ?')
-    return true;
-    next()
-}
-
+const regex = require('../middleware/checking_mail_password')
 
 exports.signup = (req, res, next) => {
-    // 
-    if (clientPasswordVerification != false){
+    if (regex.clientEmailVerification != false && regex.clientPasswordVerification != false){
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            // create new User
+            // create new User with mongoose schema
             const user = new User({
                 email :    req.body.email,
                 password : hash,
             })
             // save the user
             user.save()
-                .then((r) => {
-                    console.log("r", r)
+                .then(() => {
                     return res.status(201).json({message: "utilisateur créé !"})
                     }
                 )
