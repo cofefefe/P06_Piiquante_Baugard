@@ -3,7 +3,6 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
-
 const dotenv = require('dotenv') 
 
 // Required files
@@ -12,8 +11,8 @@ const sauceRoutes = require('./routes/sauces')
 const app = express()
 const sauceController = require('./controllers/sauces')
 const multer = require('./middleware/multer-config')
-// have access to request body
 
+// have access to request body
 app.use(express.json());
 
 // Define path of .env
@@ -33,14 +32,17 @@ app.use((req, res, next) => {
 // Link frontend and backend database
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_USER_PASSWORD}@cluster0.hzpfkea.mongodb.net/?retryWrites=true&w=majority`
 
+// connecting to mongo DB
 mongoose.connect(uri,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !'))
 
+// Define the path and method to execute according to the request
 app.use("/api/auth", userRoutes)
 app.use('/api/sauces', sauceRoutes)
+// Define path of image and create a directory images
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 

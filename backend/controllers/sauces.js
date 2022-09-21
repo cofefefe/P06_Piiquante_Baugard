@@ -1,13 +1,18 @@
+// import models and dependancies to manage files (fs), middleware auth to manage security, and to access body request (bodyParser).
 const Sauce = require('../models/sauces')
 const fs = require('fs')
 const auth = require('../middleware/auth')
 const bodyParser = require('body-parser')
-// Create an object 'sauce'
 
+// Create an object 'sauce'
 exports.addSauce = (req,res,next) => {
+    // take all datas of the sauce
     const sauceObject = JSON.parse(req.body.sauce)
-    delete sauceObject._id;
+    // Deleting the secund id
+    delete sauceObject._id
+    // use sauce's models to create an object
   const sauce = new Sauce({
+    // retrieve all key/values and specify default values
     ...sauceObject,
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     likes: 0,
@@ -21,22 +26,21 @@ exports.addSauce = (req,res,next) => {
   })
   .catch((error)=>{
     res.status(420).json({error})
-    console.log(error)
-    console.log({sauceObject})
-    console.log({sauce})
   })
 }
+
 // Delete a sauce
 exports.deleteSauce = (req, res, next) => {
+    // Find the sauce by id
     Sauce.findOne({ _id: req.params.id})
         .then(sauce => {
-                console.log('on est dans le then')
-                const filename = sauce.imageUrl.split('/images/')[1];
-                console.log({filename})
+            // retrieve filename by path of img
+                const filename = sauce.imageUrl.split('/images/')[1]
+                // Delete the img of sauce removed
                 fs.unlink(`images/${filename}`, () => {
                     Sauce.deleteOne({_id: req.params.id})
                         .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
-                        .catch(error => res.status(401).json({ error }));
+                        .catch(error => res.status(401).json({ error }))
                 });
             })
         .catch( error => {
@@ -45,21 +49,33 @@ exports.deleteSauce = (req, res, next) => {
         });
  };
 
-// Modify sauce
+// Modify sauce and update our new data
 exports.modifySauce = (req, res, next) => {
-    const sauceObject = req.file ?
-    {
-      ...JSON.parse(req.body.sauce), // Retrieve request json format
-      // switch path of modified image
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : { ...req.body }
-    // Update changes
-    Sauce.updateOne({ _id : req.params.id}, {...sauceObject, _id: req.params.id})
-    .then(res.status(200).json({ message : "Sauce modifiée"}))
-    .catch(error => res.status(400).json({ error }))
-  }
+    // Retrieve this sauce from data base by id with findOne method
+    Sauce.findOne({ _id: req.params.id }) 
+    .then((sauce) => {
+        // retrieve the file name thanks to their url
+    const filename = sauce.imageUrl.split("/images/")[1]
+    const sauceObject = req.file? 
+    // deleting previous img
+        {
+            ...fs.unlink(`images/${filename}`, () => {
+
+        }),
+    // Switching with the new img
+    ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : { ...req.body }
+    // Update the new sauce object with the new data
+    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+        .catch(error => res.status(400).json({ error }));
+    });
+    };
   
 // Find sauce
 exports.findSauce = (req,res,next) => {
+    // Using id to find the and show the sauce
     Sauce.findOne({_id : req.params.id})
         .then((sauce)=>{
             res.status(200).json(sauce)
@@ -71,6 +87,7 @@ exports.findSauce = (req,res,next) => {
 
 // Find all Sauce
 exports.findAllSauce = (req,res,next)=>{ 
+        // Using id to find the and show all sauces
     Sauce.find()
     .then((sauces)=>{
         res.status(200).json(sauces)
@@ -82,13 +99,13 @@ exports.findAllSauce = (req,res,next)=>{
 
 
 exports.likeDislikeSauce = (req, res, next) => {
-  // 1. Trouver la sauce dans la DB
+  // Find the sauce in the data base
   Sauce.findOne({ _id: req.params.id })
       .then(sauce => {
-          // 2. Réinitialiser ses like et dislike
+          // reset like and dislike 
           resetUserLikeAndDislike(sauce);
 
-          // 3. Mettre à jour ses like et dislike
+          // Updating like and dislike with incrementation
           switch (req.body.like) {
               case 1:
                   // Like
@@ -101,6 +118,7 @@ exports.likeDislikeSauce = (req, res, next) => {
                   sauce.dislikes++;
                   break;
           }
+          // Save new value of like/dislike
           sauce.save()
               .then(() => res.status(200).json({ message: 'Sauce modifiée' }))
               .catch(error => res.status(400).json({ error }));
@@ -108,17 +126,17 @@ exports.likeDislikeSauce = (req, res, next) => {
       .catch(error => res.status(400).json({ error }));
 
   function resetUserLikeAndDislike(sauce) {
-      // chercher le "UserLiked" ou "UserDisliked" index de l'utilisateur actuel
+      // Find users who liked and disliked the sauce
       const indexUserLiked = sauce.usersLiked.indexOf(req.body.userId);
       const indexUserDisliked = sauce.usersDisliked.indexOf(req.body.userId);
 
       if (indexUserLiked > -1) {
-          // L'utilisateur à été trouvé dans la list des like
+          // if user liked the sauce
           sauce.usersLiked.splice(indexUserLiked, 1);
           sauce.likes--;
       }
       if (indexUserDisliked > -1) {
-          // L'utilisateur à été trouvé dans la liste des dislike
+          // if user disliked the sauce
           sauce.usersDisliked.splice(indexUserDisliked, 1);
           sauce.dislikes--;
       }

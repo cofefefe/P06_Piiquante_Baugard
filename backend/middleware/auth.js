@@ -1,20 +1,25 @@
 const jwt = require('jsonwebtoken')
 const path = require('path')
 
-// Initialzing Dotenv for security
+// Initialzing Dotenv for security and give the path of .env
 require("dotenv").config({
-    path: path.resolve(__dirname, './routes/.env')
+    path: path.resolve(__dirname, '../.env')
 });
 
 module.exports = (req, res, next) => {
     try {
-        // .split(' ')[1] retourne la deuxième partie de l'autorisation et pas le bearer "bearer xxxxxxx"
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+        // split to delete 'bearer' and take just token after the white space
+        const token = req.headers.authorization.split(' ')[1]
+        // verify token auth with the key token
+        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET')
+        // retrieve the user linked with this token
         const userId = decodedToken.userId;
+        // if the user is not the creator of the sauce
         if (req.body.userId && req.body.userId !== userId) {
             throw 'User ID non valable !';
-        } else {
+        }
+        // if he's the creator, continue to the next middleware according client request
+        else {
             next();
         }
     } catch (error) {
