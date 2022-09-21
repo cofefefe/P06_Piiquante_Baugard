@@ -54,24 +54,22 @@ exports.modifySauce = (req, res, next) => {
     // Retrieve this sauce from data base by id with findOne method
     Sauce.findOne({ _id: req.params.id }) 
     .then((sauce) => {
-        // retrieve the file name thanks to their url
-    const filename = sauce.imageUrl.split("/images/")[1]
-    const sauceObject = req.file? 
-    // deleting previous img
-        {
-            ...fs.unlink(`images/${filename}`, () => {
+        console.log("req.body.sauce", JSON.parse(req.body.sauce))
 
-        }),
-    // Switching with the new img
-    ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        } : { ...req.body }
-    // Update the new sauce object with the new data
-    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
-        .catch(error => res.status(400).json({ error }));
-    });
-    };
+        let sauceObject = {...req.body.sauce};
+        sauceObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+
+        // Delete the old image
+        // retrieve the file name thanks to their url
+        const filename = sauce.imageUrl.split("/images/")[1];
+        fs.unlink(`images/${filename}`, function () {
+            // Update the new sauce object with the new data
+            Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
+                .then(() => res.status(200).json({message: 'Sauce modifiée !'}))
+                .catch(error => res.status(400).json({error}));
+        });
+    })
+}
   
 // Find sauce
 exports.findSauce = (req,res,next) => {

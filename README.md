@@ -8,7 +8,6 @@ Openclassroom's project | working on node, express, mongoDB | backend
 4. go to test[http://localhost4200](http://localhost:4200)
 5. `cd ../backend`
 7. `npm install` ( if not already done )
-8. `npm install nodemon --save`
-9. `npm run serve` to launch nodemon or =>
-10. `npm run start` to lauch node
-11. Dans le dossier /backend, créez un dossier 'images'
+8. `npm run serve` to launch nodemon or =>
+9. `npm run start` to lauch node
+10. Dans le dossier /backend, créez un dossier 'images'

@@ -36,9 +36,9 @@ export class SignupComponent implements OnInit {
         this.loading = false;
         this.router.navigate(['/sauces']);
       }),
-      catchError(error => {
+      catchError(res => {
         this.loading = false;
-        this.errorMsg = error.message;
+        this.errorMsg = res.error.message;
         return EMPTY;
       })
     ).subscribe();
