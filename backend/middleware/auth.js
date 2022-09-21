@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
         // split to delete 'bearer' and take just token after the white space
         const token = req.headers.authorization.split(' ')[1]
         // verify token auth with the key token
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET')
+        const decodedToken = jwt.verify(token, process.env.TOKEN)
         // retrieve the user linked with this token
         const userId = decodedToken.userId;
         // if the user is not the creator of the sauce

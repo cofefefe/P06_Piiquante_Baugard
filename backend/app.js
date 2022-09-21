@@ -15,7 +15,7 @@ const multer = require('./middleware/multer-config')
 // have access to request body
 app.use(express.json());
 
-// Define path of .env
+// retrieve .env
 dotenv.config({
   path: path.resolve(__dirname, '.env')
 });

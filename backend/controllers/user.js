@@ -2,9 +2,15 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
+const dotenv = require('dotenv')
+const path = require('path')
 //Import User Model
 const User = require('../models/user')
 const regex = require('../middleware/checking_mail_password')
+// Retrieve .env for token key
+dotenv.config({
+    path: path.resolve(__dirname, '.env')
+  });
 
 exports.signup = (req, res, next) => {
     if (regex.clientEmailVerification != false && regex.clientPasswordVerification != false){
@@ -46,7 +52,7 @@ exports.login = (req, res, next) => {
                         userId : user._id,
                         token : jwt.sign(
                             { userId:user._id },
-                            "RANDOM_TOKEN_SECRET",
+                            process.env.TOKEN,
                             { expiresIn:'24h'}
                         )
                     })
