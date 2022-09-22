@@ -54,11 +54,10 @@ exports.modifySauce = (req, res, next) => {
     // Retrieve this sauce from data base by id with findOne method
     Sauce.findOne({ _id: req.params.id }) 
     .then((sauce) => {
-        console.log("req.body.sauce", JSON.parse(req.body.sauce))
-
+        // Retrieve the object sauce from the request
         let sauceObject = {...req.body.sauce};
+        // Define path of img
         sauceObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-
         // Delete the old image
         // retrieve the file name thanks to their url
         const filename = sauce.imageUrl.split("/images/")[1];
